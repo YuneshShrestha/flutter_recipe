@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:receipe/model/recepieModel.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -10,11 +13,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
+  List<ReceipeModel> receipeList = [];
   void getData(String query) async {
     var response = await http.get(Uri.parse(
         "https://api.edamam.com/api/recipes/v2?q=$query&app_key=%2007df7c7836c9fb2ecf5ecd3fb5216c61&_cont=CHcVQBtNNQphDmgVQntAEX4BZktxAAAFRmNDAmEQYVZ6AwcCUXlSVmQbNVciB1FVRWERCzQWZQN1AgIDRGFFUjcaMV1zAVcVLnlSVSBMPkd5BgMbUSYRVTdgMgksRlpSAAcRXTVGcV84SU4%3D&type=public&app_id=76632e52"));
+    Map data = jsonDecode(response.body);
+    List hitsData = data['hits'];
     if (response.statusCode == 200) {
-      print(response.body);
+      for (var element in hitsData) {
+        ReceipeModel receipeModel = ReceipeModel();
+        receipeModel = ReceipeModel.factoryforMap(element);
+        receipeList.add(receipeModel);
+      }
+      for (ReceipeModel element in receipeList) {
+        print(element.appLabel);
+      }
     } else {
       print("Problem Detected");
     }
