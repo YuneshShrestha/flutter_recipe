@@ -120,6 +120,16 @@ class _HomeState extends State<Home> {
                       ],
                     ),
                   ),
+                  // List Widget
+                  SizedBox(
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 1200,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Text("Hello $index");
+                        }),
+                  ),
                 ],
               ),
             ),
