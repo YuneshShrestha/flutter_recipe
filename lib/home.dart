@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -9,6 +10,22 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   TextEditingController searchController = TextEditingController();
+  void getData(String query) async {
+    var response = await http.get(Uri.parse(
+        "https://api.edamam.com/api/recipes/v2?q=$query&app_key=%2007df7c7836c9fb2ecf5ecd3fb5216c61&_cont=CHcVQBtNNQphDmgVQntAEX4BZktxAAAFRmNDAmEQYVZ6AwcCUXlSVmQbNVciB1FVRWERCzQWZQN1AgIDRGFFUjcaMV1zAVcVLnlSVSBMPkd5BgMbUSYRVTdgMgksRlpSAAcRXTVGcV84SU4%3D&type=public&app_id=76632e52"));
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print("Problem Detected");
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getData('chicken');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +58,15 @@ class _HomeState extends State<Home> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                // /
-                                // print(searchController.text);
+                                if ((searchController.text)
+                                        .replaceAll(" ", "") ==
+                                    "") {
+                                  print("Please fill search");
+                                } else {
+                                  setState(() {
+                                    getData(searchController.text);
+                                  });
+                                }
                               },
                               icon: const Icon(
                                 Icons.search,
